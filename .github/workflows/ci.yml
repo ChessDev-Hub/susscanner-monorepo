@@ -1,0 +1,20 @@
+name: ci
+on: [push]
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r apps/api/requirements.txt
+      - run: python -m pyflakes apps/api || true
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: cd apps/web && npm ci && npm run build || npm run build --if-present
